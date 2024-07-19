@@ -48,7 +48,6 @@ var (
 		{"tz", tzCMD, "`zone` [24h]", "Set your IANA timezone (like tz Asia/Dubai) and optionally set 24h"},
 		{"nick", nickCMD, "`name`", "Change your username"},
 		{"prompt", promptCMD, "`prompt`", "Change your prompt. Run `man prompt` for more info"},
-		{"pronouns", pronounsCMD, "`@user`|`pronouns`", "Set your pronouns or get another user's"},
 		{"theme", themeCMD, "`name`|list", "Change the syntax highlighting theme"},
 		{"rest", commandsRestCMD, "", "Uncommon commands list"}}
 	RestCMDs = []CMD{
@@ -743,29 +742,6 @@ func pwdCMD(_ string, u *User) {
 
 func shrugCMD(line string, u *User) {
 	u.room.broadcast(u.Name, line+` ¯\\_(ツ)_/¯`)
-}
-
-func pronounsCMD(line string, u *User) {
-	args := strings.Fields(line)
-
-	if line == "" {
-		u.room.broadcast(Devbot, "Set pronouns by providing em or query a user's pronouns!")
-		return
-	}
-
-	if len(args) == 1 && strings.HasPrefix(args[0], "@") {
-		victim, ok := findUserByName(u.room, args[0][1:])
-		if !ok {
-			u.room.broadcast(Devbot, "Who's that?")
-			return
-		}
-		u.room.broadcast(Devbot, victim.Name+"'s pronouns are "+victim.displayPronouns())
-		return
-	}
-
-	u.Pronouns = strings.Fields(strings.ReplaceAll(strings.ToLower(line), "\n", ""))
-	//u.changeColor(u.Color) // refresh pronouns
-	u.room.broadcast(Devbot, u.Name+" now goes by "+u.displayPronouns())
 }
 
 func emojisCMD(_ string, u *User) {
